@@ -1,0 +1,174 @@
+{
+  "format_version": "1.2",
+  "terraform_version": "1.6.6",
+  "variables": {},
+  "planned_values": {
+    "root_module": {
+      "resources": [
+        {
+          "address": "aws_iam_policy.overpermissive_app",
+          "mode": "managed",
+          "type": "aws_iam_policy",
+          "name": "overpermissive_app",
+          "provider_name": "registry.terraform.io/hashicorp/aws",
+          "schema_version": 0,
+          "values": {
+            "name": "overpermissive-application-policy",
+            "description": "INSECURE: Grants full AWS access — for demo purposes only",
+            "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"FullAccess\",\"Effect\":\"Allow\",\"Action\":\"*\",\"Resource\":\"*\"}]}"
+          }
+        },
+        {
+          "address": "aws_iam_role.application_role",
+          "mode": "managed",
+          "type": "aws_iam_role",
+          "name": "application_role",
+          "provider_name": "registry.terraform.io/hashicorp/aws",
+          "schema_version": 0,
+          "values": {
+            "name": "vulnerable-application-role",
+            "assume_role_policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":\"*\",\"Action\":\"sts:AssumeRole\"}]}"
+          }
+        },
+        {
+          "address": "aws_iam_role_policy.application_inline",
+          "mode": "managed",
+          "type": "aws_iam_role_policy",
+          "name": "application_inline",
+          "provider_name": "registry.terraform.io/hashicorp/aws",
+          "schema_version": 0,
+          "values": {
+            "name": "vulnerable-inline-policy",
+            "role": "vulnerable-application-role",
+            "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"DangerousIAMActions\",\"Effect\":\"Allow\",\"Action\":[\"iam:PassRole\",\"iam:CreateAccessKey\",\"iam:AttachRolePolicy\",\"iam:PutRolePolicy\",\"iam:UpdateAssumeRolePolicy\"],\"Resource\":\"*\"},{\"Sid\":\"ExcessiveServiceAccess\",\"Effect\":\"Allow\",\"Action\":[\"s3:*\",\"ec2:*\",\"iam:*\",\"secretsmanager:*\"],\"Resource\":\"*\"}]}"
+          }
+        },
+        {
+          "address": "aws_iam_role_policy_attachment.admin_attachment",
+          "mode": "managed",
+          "type": "aws_iam_role_policy_attachment",
+          "name": "admin_attachment",
+          "provider_name": "registry.terraform.io/hashicorp/aws",
+          "schema_version": 0,
+          "values": {
+            "role": "vulnerable-application-role",
+            "policy_arn": "arn:aws:iam::aws:policy/AdministratorAccess"
+          }
+        },
+        {
+          "address": "aws_iam_policy.kms_overpermissive",
+          "mode": "managed",
+          "type": "aws_iam_policy",
+          "name": "kms_overpermissive",
+          "provider_name": "registry.terraform.io/hashicorp/aws",
+          "schema_version": 0,
+          "values": {
+            "name": "overpermissive-kms-policy",
+            "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Action\":[\"kms:Decrypt\",\"kms:Encrypt\",\"kms:DeleteAlias\",\"kms:DisableKey\"],\"Resource\":\"*\"}]}"
+          }
+        }
+      ]
+    }
+  },
+  "resource_changes": [
+    {
+      "address": "aws_iam_policy.overpermissive_app",
+      "mode": "managed",
+      "type": "aws_iam_policy",
+      "name": "overpermissive_app",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "overpermissive-application-policy",
+          "description": "INSECURE: Grants full AWS access — for demo purposes only",
+          "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"FullAccess\",\"Effect\":\"Allow\",\"Action\":\"*\",\"Resource\":\"*\"}]}"
+        },
+        "after_unknown": {
+          "id": true,
+          "arn": true,
+          "path": true
+        }
+      }
+    },
+    {
+      "address": "aws_iam_role.application_role",
+      "mode": "managed",
+      "type": "aws_iam_role",
+      "name": "application_role",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "vulnerable-application-role",
+          "assume_role_policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":\"*\",\"Action\":\"sts:AssumeRole\"}]}"
+        },
+        "after_unknown": {
+          "id": true,
+          "arn": true
+        }
+      }
+    },
+    {
+      "address": "aws_iam_role_policy.application_inline",
+      "mode": "managed",
+      "type": "aws_iam_role_policy",
+      "name": "application_inline",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "vulnerable-inline-policy",
+          "role": "vulnerable-application-role",
+          "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"DangerousIAMActions\",\"Effect\":\"Allow\",\"Action\":[\"iam:PassRole\",\"iam:CreateAccessKey\",\"iam:AttachRolePolicy\",\"iam:PutRolePolicy\",\"iam:UpdateAssumeRolePolicy\"],\"Resource\":\"*\"},{\"Sid\":\"ExcessiveServiceAccess\",\"Effect\":\"Allow\",\"Action\":[\"s3:*\",\"ec2:*\",\"iam:*\",\"secretsmanager:*\"],\"Resource\":\"*\"}]}"
+        },
+        "after_unknown": {
+          "id": true
+        }
+      }
+    },
+    {
+      "address": "aws_iam_role_policy_attachment.admin_attachment",
+      "mode": "managed",
+      "type": "aws_iam_role_policy_attachment",
+      "name": "admin_attachment",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "role": "vulnerable-application-role",
+          "policy_arn": "arn:aws:iam::aws:policy/AdministratorAccess"
+        },
+        "after_unknown": {
+          "id": true
+        }
+      }
+    },
+    {
+      "address": "aws_iam_policy.kms_overpermissive",
+      "mode": "managed",
+      "type": "aws_iam_policy",
+      "name": "kms_overpermissive",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "overpermissive-kms-policy",
+          "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Action\":[\"kms:Decrypt\",\"kms:Encrypt\",\"kms:DeleteAlias\",\"kms:DisableKey\"],\"Resource\":\"*\"}]}"
+        },
+        "after_unknown": {
+          "id": true,
+          "arn": true
+        }
+      }
+    }
+  ],
+  "configuration": {
+    "root_module": {}
+  }
+}

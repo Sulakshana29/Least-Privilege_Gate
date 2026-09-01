@@ -1,0 +1,28 @@
+# Cloud Policy Guard — Default Configuration
+# ============================================
+# This file is loaded automatically when present in the working directory.
+# CLI flags always take precedence over values set here.
+#
+# To use a custom config file location:
+#   cloud-policy-guard scan --config /path/to/my-config.yaml --terraform-plan plan.json
+
+# Minimum severity level that causes the security gate to FAIL.
+# Options: critical | high | medium | low | info
+# Default: critical (only CRITICAL findings block the pipeline)
+fail_on: critical
+
+# Optional: Maximum total risk score before FAIL (regardless of severity).
+# Useful when many medium findings accumulate to an unacceptable aggregate risk.
+# Set to null to disable this threshold.
+# max_risk_score: 50
+
+# Rule IDs to exclude from the scan. Use with caution.
+# Example: exclude LP005 if you accept service-level wildcards during development.
+# exclude_rules:
+#   - LP005
+
+# Output format for the scan report.
+# Options: text | json
+# text → colored console output (default, for human reading)
+# json → structured JSON (for CI/CD systems and tooling)
+format: text
