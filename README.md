@@ -27,7 +27,7 @@ flowchart LR
 
 ## Installation
 
-Requires Python 3.10 or newer.
+Requires Python 3.11 or newer.
 
 ```bash
 # Clone the repository
