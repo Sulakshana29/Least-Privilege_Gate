@@ -4,6 +4,18 @@
 
 By shifting security left, Cloud Policy Guard blocks overly permissive IAM configurations before they are deployed to your AWS accounts.
 
+```mermaid
+flowchart LR
+    A[Developer] -->|terraform plan| B(plan.json)
+    B --> C{Cloud Policy Guard}
+    C -->|Pass| D[Deploy to AWS]
+    C -->|Fail| E[Block Pipeline]
+    
+    style C fill:#f9f,stroke:#333,stroke-width:2px
+    style D fill:#d4edda,stroke:#28a745
+    style E fill:#f8d7da,stroke:#dc3545
+```
+
 ## Features
 
 - **Pre-deployment Analysis:** Analyzes Terraform plans (`terraform show -json`) *before* applying.
@@ -68,6 +80,39 @@ format: text            # Output format (options: text, json)
 CLI arguments take precedence over the config file:
 ```bash
 cloud-policy-guard scan --terraform-plan plan.json --fail-on high --max-risk-score 20 --format json
+```
+
+## CI/CD Pipeline Integration
+
+Cloud Policy Guard is designed to be a drop-in security gate for your Terraform deployment pipelines (GitHub Actions, GitLab CI, Jenkins, etc.).
+
+### Example: GitHub Actions
+
+```yaml
+name: Terraform Security Scan
+on: [pull_request]
+
+jobs:
+  security-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        
+      - name: Terraform Plan
+        run: |
+          terraform init
+          terraform plan -out=tfplan
+          terraform show -json tfplan > plan.json
+          
+      - name: Install Cloud Policy Guard
+        run: pip install cloud-policy-guard
+        
+      - name: Scan IAM Least Privilege
+        # Pipeline fails if Cloud Policy Guard returns exit code 1
+        run: cloud-policy-guard scan --terraform-plan plan.json
 ```
 
 ## Example Vulnerable vs. Secure
